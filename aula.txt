@@ -1,0 +1,84 @@
+curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+
+    // pega qrr pacote e baixa como um esqueleto de app e ja roda o install
+# composer create-project --prefer-dist laravel/lumen
+    // Após a instalação do lumen, automaticamente será criado um diretório "lumen"
+ # cd lumen
+    // Startar o servidor local porta 8000 com o arquivo lumen
+# php -S localhost:8000 -t public
+    // Após isso, verificar a mesma:
+    localhost:8000
+    // Se instalado com sucesso, aparecerá a mensagem com a versão instalada do lumen
+    Lumen (5.7.7) (Laravel Components 5.7.*)
+
+
+->routes
+    web.php
+    - Teste de hello word
+        #$router->get('/hello/world', function(){
+            return "Hello word";
+        });
+        //Esta funcão será executada quando a URL for: http://localhost:8000/hello/world
+    -Passando parametros pela URL
+        //UTILIZAR {} 
+            #$router->get('/hello/{name}}, function($name){
+                return "Hello . $name";
+            });
+        //Desse modo, ao executar, por exemplo,  a URL: http://localhost:8000/hello/matheus
+        // será exibido:
+        "Hello matheus";
+        // Pode-se também, criar um apelido para a rota
+        $router->get('/hello/{name}}', ['as' =>'hello-world'], function($name){
+            return "Hello . $name";
+        });
+        //RETORNA UM ARRAY ao acessar a URL descrita: http://localhost:8000/api/users
+            $router->group([], function () use ($router) {
+                $router->get('/api/users', function() {
+                return[];
+                });
+            });
+
+    #php artisan            // dentro do diretorio lumen
+        // LISTA todos os comandos do lumen
+
+    ->app
+        ->Htto
+            ->Controllers
+                HelloController.php
+                    namespace App\Http\Controllers;
+                    class HelloController extends Controller{
+                        // criar action
+                        public function index($names){
+                            return 'Hello' . $name ;
+                        }
+        // CHAMA-SE DESSA MANEIRA:
+        $router->get('/hello/{name}', 'HelloController@index');
+        
+
+     -Utilizando apelidos as rotas
+     app->
+        ->Http
+            ->Controllers
+                -> HelloController.php
+                    <?php
+                        namespace App\Http\Controllers;
+                        class HelloController extends Controller{
+                            // criar action
+                            public function index($names){
+                                return 'Hello' . $name ;
+                            }
+
+                        }
+        -> routes 
+            ->web.php
+         $router->get('/hello/{name}', [
+        'as' => 'hello-world',
+        'uses' => 'HelloController@index'
+        ]);
+    
+Fim aula 3
+
+
+
+
+    
