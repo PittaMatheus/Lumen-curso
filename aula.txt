@@ -77,6 +77,77 @@ curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/loca
         ]);
     
 Fim aula 3
+______________________________________________________________________________________________
+    É necessário ativar o Eloquent para manipulaçao de banco de dados
+-> Bootstrap
+    ->app.php
+    // Pesquisar por "Eloquent" e descomentar sua respectiva linha.
+    ->app  
+        ->User.php          // model do eloquent[pode-se utilizar o arquivo para ter acesso ao BD]
+    // CONFIGURAR CONEXAO AO BANCO DE DADOS NO ARQUIVO .ENV
+
+- CONCEITO DE MIGRATION E SEEDS
+    -MIGRATION
+            // Gerenciamento de mudanças incrementais e reversíveis em esquemas (estrutura) de banco de dados.
+            Isso permite que seja possível ter um controle "das versões" do banco de dados.
+            As migrations são executadas sempre que for necessário atualizar a estrutura do banco ou reverter as
+             alterações para uma migration antiga. É algo muito usado no desenvolvimento de software ágil, onde 
+             geralmente o desenvolvimento da aplicação é feito em conjunto com um banco de dados que está em construção.
+             Assim, a estrutura da base de dados vai sendo alterada em conjunto com o desenvolvimento.
+    -SEEDS
+            // Como o próprio nome diz, um seeder é um semeador. Neste contexto específico serve para alimentar a base de dados com dados.
+            Geralmente é usado para popular a base com dados padrões, necessários pro funcionamento correto da aplicação.
+            Dependendo da ferramenta/framework que estiver usando, uma migration específica pode conter um seeder específico,
+            mas tenha em mente que a migration atualiza a estrutura da base de dados, enquanto o seeder serve para popular a base.
+
+    - CRIANDO E EDITANDO OS 2 ARQUIVOS DE MIGRATIONS
+    // Cria um arquivo de criação de tabelas
+        # php artisan make:migration create_users_table 
+    // cria arquivo de senhas
+        # php artisan make:migration create_password_resets_table
+    // Após isso, os respectivos arquivos serão criados no projeto no seguinte local:
+        ->database->migrations
+
+        -CREATE_USERS
+            // Dentro da função up(), definir os parametros:
+                Schema::create('users', function (Blueprint $table) {
+                    $table->increments('id');
+                    $table->string('name');
+                    $table->string('email') ->unique();
+                    $table->string('password');
+                    $table->rememberToken();
+                    $table->timestamps();
+                });
+            // Dentro da função down():
+                Schema::dropIfExists('users');
+
+
+        -CREATE_PASSWORD
+            // Dentro da função up(), definir os parametros:
+                Schema::create('password_resets', function (Blueprint $table) {
+                    $table->string('email')->index();
+                    $table->string('token')->index();
+                    $table->rememberToken();
+                    $table->timestamps('created_at')->nullable();
+                });
+            // Dentro da função down():
+                Schema::dropIfExists('password_resets');
+    VERIFICAÇÃO
+        # php artisan migrate;
+        // Se tudo ocorreu bem, irá ocorrer o seguinte retorno:
+            Migration table created successfully.
+            Migrating: 2019_01_30_101738_create_users_table
+            Migrated:  2019_01_30_101738_create_users_table
+            Migrating: 2019_01_30_103244_create_password_resets_table
+            Migrated:  2019_01_30_103244_create_password_resets_table
+
+        // desfazer alterações
+        #php artisan: rollback
+
+
+
+
+
 
 
 
