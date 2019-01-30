@@ -29,8 +29,11 @@ $router->get('/', function () use ($router) {
     //     $router->get('/api/users', function() {
     //         return[];
     // });
-    // $router->group(['prefix' => 'api'], function () use ($router) {
-    //     $router->get('/users', function() {
-    //     return[];
-    //     });
-    // });
+    $router->group(['prefix' => 'api'], function () use ($router) {
+        $router->get('/users', 'Api\UsersController@index');
+        $router->get('/users/{id}', 'Api\UsersController@show');
+        $router->post('/users', 'Api\UsersController@store');
+        $router->put('/users', 'Api\UsersController@update');
+
+
+    });

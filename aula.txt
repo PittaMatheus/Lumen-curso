@@ -183,9 +183,93 @@ ________________________________________________________________________________
     // comando para executar o seeds e criar os 30 registros fakes
         # php artisan db:seed
 
+30 registros fakes foram criados
+______________________________________________________________________________________________________
+
+// Criar a pasta Api dentro de Http->Controllers
+    UsersController.php
+        <?php
+                namespace App\Http\Controllers\Api;
+                use App\Http\Controllers\Controller;
+                use App\User;
+                class UsersController extends Controller{
+                    public function index(){
+                        // Retorna todos os dados de User
+                        $users = User::all();
+                        // All não é o ideal. Pode-se utilizar tambem o metodo: paginate
+                        // Retorna uma string - JSON
+                        return $users;
+                    }
+                }
+        ?>
+
+// routes->web.php
+       $router->group(['prefix' => 'api'], function () use ($router) {
+            //@index = action
+        $router->get('/users', 'Api\UsersController@index');
+    });
+
+// TODOS os 30 usuarios fakes serão listados na url: http://localhost:8000/api/users
+
+// METODO SHOW - Exibe um usuario através de seu ID pela URL: http://localhost:8000/api/users/1
+    Http->Controllers->UsersController.php
+        public function show($id){
+            // Procure ou falhe
+            $user = User::findOrFail($id);
+            // Retorna uma string - JSON
+            return $user;
+        }
+    // APÓS isso, registrar a rota
+    ->routes->web.php
 
 
-
-
-
+// METODO STORE - Cria um registro no banco de dados
+    Http->Controllers->UsersController.php
+    Adicionar a bibliteca
+        use Illuminate\Http\Request;
+        // Metodo de inserção
+        public function store(Request $request){
+            // Insere qualquer parametro que for passado pela requisição    
+            $user = User::create($request->all());
+            return $user;
+        }
+    ->app->user.php
+            // Informa os campos que são permitidos a inserção em massa(Utilizando o $request->all())
+          protected $fillable = ['atributo1','atributo2', 'atributoN'];
     
+    //ADICIONAR A ROTA
+    ->routes->web.php 
+        $router->post('/users', 'Api\UsersController@store');
+
+    // Pode-se utilizar o Postman para realizar os testes
+    Basta colocar a URL :http://localhost:8000/api/users e enviar uma requisição POST
+    ele irá inserir um registro Fake. 
+    // Pode -se também criar um formulário e enviar os respectivos parametros via POST para inserção:
+        name; email; password; 
+
+// METODO UPDATE
+    Criar um novo action
+    Http->Controllers->UsersController.php
+        public function update(Request $request, $id){
+            $user = User::findOrFail($id);
+            $user->update($request->all());
+            return $user;
+        }
+    // Adicionar rota
+        ->app->routes->web.php
+        $router->put('/users/{id}', 'Api\UsersController@update');
+
+// METODO DESTROY
+    Criar um novo action
+    Http->Controllers->UsersController.php
+        public function destroy($id){
+            $user = User::findOrFail($id);
+            $user->delete();
+            return $user;
+        }
+    // Adicionar rota
+        ->app->routes->web.php
+        $router->delete('/users/{id}', 'Api\UsersController@destroy');
+
+CRUD SEM VIEW FINALIZADO
+______________________________________________________________________________________________
