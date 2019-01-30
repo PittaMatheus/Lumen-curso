@@ -12,8 +12,13 @@
 */
 
 $factory->define(App\User::class, function (Faker\Generator $faker) {
+    static $password;
+
     return [
-        'name' => $faker->name,
-        'email' => $faker->email,
+        'name'              => $faker->name,
+        'email'             => $faker->unique()->safeEmail,
+        // Se a senha for passada, utilize-a. Caso contrario, gera-se um Hash
+        'password'          => $password ?: $password = app('hash')->make('secret'),
+        'remember_token'    => str_random(10),
     ];
 });

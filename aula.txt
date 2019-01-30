@@ -37,10 +37,12 @@ curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/loca
                 return[];
                 });
             });
-
-    #php artisan            // dentro do diretorio lumen
-        // LISTA todos os comandos do lumen
-
+    // dentro do diretorio lumen
+    // LISTA todos os comandos do lumen
+        #php artisan                 
+    // Artisan é o nome da interface da linha de comando incluída no Laravel. Esta interface fornece um bom número de comandos auxiliares 
+        para que você use durante o desenvolvimento de sua aplicação. O artisan é impulsionado pelo poderoso componente de Console do Symfony 
+        framework.
     ->app
         ->Htto
             ->Controllers
@@ -100,7 +102,7 @@ ________________________________________________________________________________
             Dependendo da ferramenta/framework que estiver usando, uma migration específica pode conter um seeder específico,
             mas tenha em mente que a migration atualiza a estrutura da base de dados, enquanto o seeder serve para popular a base.
 
-    - CRIANDO E EDITANDO OS 2 ARQUIVOS DE MIGRATIONS
+- CRIANDO E EDITANDO OS 2 ARQUIVOS DE MIGRATIONS
     // Cria um arquivo de criação de tabelas
         # php artisan make:migration create_users_table 
     // cria arquivo de senhas
@@ -144,8 +146,42 @@ ________________________________________________________________________________
         // desfazer alterações
         #php artisan: rollback
 
+-SEEDS
+    // Criando a semente para implementar os registros automaticos
+    # php artisan make:seeder UserTableSeeder
+    ->database->seeds->DatabaseSeeder.php
+        //Descomentar a chamada da função
+            $this->call('UsersTableSeeder');
+    // Configurando o factory
+        // Permite às classes delegar para subclasses decidirem, isso é feito através da criação de objetos
+            que chamam o método fabrica especificado numa interface e implementado por um classe filha ou implementado 
+            numa classe abstrata e opcionalmente sobrescrito por classes derivadas.
+    ->database -> factories -> ModelFactory.php
+        // biblioteca FAKER("Criadora de dados falsos")
+        // Configurar o seguinte método 
+        $factory->define(App\User::class, function (Faker\Generator $faker) {
+            static $password;
+            return [
+                'name'              => $faker->name,
+                'email'             => $faker->unique()->safeEmail,
+                // Se a senha for passada, utilize-a. Caso contrario, gera-se um Hash
+                'password'          => $password ?: $password = app('hash')->make('secret'),
+                'remember_token'    => str_random(10),
+            ];
+        });
 
-
+    ->database->seeds->UserTableSeeder.php
+        // Configurar a função run do seguinte modo:
+            public function run()
+            {   //  toda vez que um seed roda, ele não da truncate automaticamente,ou seja, é inserido registro
+                // sob registro
+                \DB::table('users')->truncate();
+                //  utiliza o factory e cria 30 registros. Se não passado parametro, cria-se 1.
+                //  $factory->define(App\User::class, function (Faker\Generator $faker) 
+                factory(App\User::class, 30) ->create();
+            }
+    // comando para executar o seeds e criar os 30 registros fakes
+        # php artisan db:seed
 
 
 
