@@ -30,10 +30,9 @@ $router->get('/', function () use ($router) {
     //         return[];
     // });
     $router->group(['prefix' => 'api'], function () use ($router) {
+        $router->get('/', 'Api\WelcomeController@index');
         $router->get('/users', 'Api\UsersController@index');
         $router->get('/users/{id}', 'Api\UsersController@show');
         $router->post('/users', 'Api\UsersController@store');
         $router->put('/users', 'Api\UsersController@update');
-
-
     });
